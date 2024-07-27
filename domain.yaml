@@ -1,0 +1,47 @@
+apiVersion: weblogic.oracle/v9
+kind: Domain
+metadata:
+  labels:
+    weblogic.domainUID: sample-domain1
+  name: sample-domain1
+  namespace: sample-domain1-ns
+spec:
+  clusters:
+  - name: sample-domain1-cluster-1
+  configuration:
+    model:
+      auxiliaryImages:
+      - image: phx.ocir.io/weblogick8s/quick-start-aux-image:v1
+      domainType: WLS
+      runtimeEncryptionSecret: sample-domain1-runtime-encryption-secret
+    overrideDistributionStrategy: Dynamic
+  domainHome: /u01/domains/sample-domain1
+  domainHomeSourceType: FromModel
+  failureRetryIntervalSeconds: 120
+  failureRetryLimitMinutes: 1440
+  httpAccessLogInLogHome: true
+  image: container-registry.oracle.com/middleware/weblogic:14.1.1.0
+  imagePullPolicy: IfNotPresent
+  imagePullSecrets:
+  - name: weblogic-repo-credentials
+  includeServerOutInPodLog: true
+  introspectVersion: "1"
+  maxClusterConcurrentShutdown: 1
+  maxClusterConcurrentStartup: 0
+  maxClusterUnavailable: 1
+  replaceVariablesInJavaOptions: false
+  replicas: 1
+  restartVersion: "1"
+  serverPod:
+    env:
+    - name: JAVA_OPTIONS
+      value: -Dweblogic.StdoutDebugEnabled=true
+    - name: USER_MEM_ARGS
+      value: '-Djava.security.egd=file:/dev/./urandom -Xms256m -Xmx512m '
+    resources:
+      requests:
+        cpu: 450m
+        memory: 768Mi
+  serverStartPolicy: IfNeeded
+  webLogicCredentialsSecret:
+    name: sample-domain1-weblogic-credentials

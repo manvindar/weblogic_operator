@@ -1,0 +1,39 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: console
+  namespace: sample-domain1-ns
+  annotations:
+    haproxy.org/rewrite-target: /
+    ingress.class: haproxy
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /console
+        pathType: Prefix
+        backend:
+          service:
+            name: sample-domain1-admin-server
+            port:
+              number: 7001
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: quickstart
+  namespace: sample-domain1-ns
+  annotations:
+    haproxy.org/rewrite-target: /
+    ingress.class: haproxy
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /quickstart
+        pathType: Prefix
+        backend:
+          service:
+            name: sample-domain1-cluster-cluster-1
+            port:
+              number: 8001
